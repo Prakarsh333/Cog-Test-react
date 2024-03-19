@@ -27,8 +27,12 @@ function Test() {
         shownImages[index] = 1;
     };
     function moveToScore() {
-        id = changeScore;
-        navigate("/Score", {state : {id : id}});
+        console.log("data send to Score page")
+        let tosend ={
+            timearr: myArray,
+            id: changeScore
+        };
+        navigate("/Score", {state : tosend});
     }
     
 
