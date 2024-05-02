@@ -8,6 +8,11 @@ import Test_2 from "./Test_2"
 import Test_3 from "./Test_3"
 import Home from "./Home"
 import Dashboard from './components/dashboard';
+import Brief from "./Brief"
+import Instruction from "./Instruction"
+import Sample from "./Sample"
+import Ready from "./Ready"
+
 
 const App = () => {
 
@@ -16,6 +21,13 @@ const App = () => {
     <Router>
       <Routes>
         <Route path='/' element={<Guideline/>}></Route>
+        <Route path='/Brief' element={<Brief/>}></Route>
+        <Route path='/Instruction' element={<Instruction/>}></Route>
+        <Route path='/Sample' element={<Sample/>}></Route>
+        <Route path='/Ready' element={<Ready/>}></Route>
+
+
+
         <Route path='/Test' element={<Test/>}></Route>
         <Route path='/Score' element={<Score/>}></Route>
         <Route path='/Level' element={<Level/>}></Route>

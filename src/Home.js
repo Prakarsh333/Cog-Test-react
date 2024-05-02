@@ -9,8 +9,7 @@ import Experience from "./components/experience"
 function Level() {
 
   return (
-    <div>
-        <h1>The is the Sample Landing Page Under Beta Version</h1>      
+    <div>     
      
         <Navbar />
         <Hero />

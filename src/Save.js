@@ -1,73 +1,70 @@
-import React, { useState, useEffect } from 'react';
+import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const shownImages = new Array(3).fill(0);
-let check  = 0; // check == 0 score will increase
 
-const App = () => {
-    const images = [
-        require('./image-1.jpg'),
-        require('./image-2.jpg'),
-        require('./image-3.jpg'),
-    ];
-
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const [changeCount, setChangeCount] = useState(0);
-    const [changeScore, setChangeScore] = useState(0);
-
-    function markImageAsShown(index) {
-        shownImages[index] = 1;
-    };
-
-    useEffect(() => {
-        if (changeCount >= 6) {
-            return;
-        }
-
-        let nextImageIndex = Math.floor(Math.random() * images.length);
-        if (nextImageIndex === currentImageIndex) {
-            nextImageIndex = (currentImageIndex + 1) % images.length;
-        }
-
-        const timer = setTimeout(() => {
-            setCurrentImageIndex(nextImageIndex);
-            setChangeCount(changeCount + 1);
-            markImageAsShown(currentImageIndex); // mark the currentImage as marked
-            check = 0;
-        }, 3000);
-
-        return () => clearTimeout(timer);
-    }, [changeCount]);
-
-    const handleClick_seen = () => {
-        if (shownImages[currentImageIndex] === 1 && check === 0) {
-            setChangeScore(changeScore + 1);
-        } else if (check === 0) {
-            setChangeScore(changeScore - 1);
-        }
-        check = 1;
-    };
-
-    const handleClick_notseen = () => {
-        if (shownImages[currentImageIndex] === 0 && check === 0) {
-            setChangeScore(changeScore + 1);
-        } else if (check === 0) {
-            setChangeScore(changeScore - 1);
-        }
-        check = 1;
-    };
-
-    return (
-        <div className='min-h-screen bg-gradient-to-r from-gray-800 to-white flex flex-col items-center justify-center'>
-            <h1 className="text-3xl font-bold text-white mb-4">Test Page</h1>
-            <img src={images[currentImageIndex]} alt="Dynamic" className="shadow-lg mb-4" style={{ height: '200px', width: '350px' }} />
-            <br></br>
-            <div>
-                <button type='button' className='text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' onClick={handleClick_seen}>Already Seen</button>
-                <button type='button' className='text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700' onClick={handleClick_notseen}>Not Seen</button>
-            </div>
-            <h2 className="text-xl font-medium text-white mt-4">Your current score is: {changeScore}</h2>
-        </div>
-    );
+function sumArray(arr) {
+  return arr.reduce((acc, current) => acc + current, 0);
 }
 
-export default App;
+function Score() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const correct = location.state.correct;
+  const incorrect = location.state.incorrect;
+  const timearr = location.state.timearr;
+
+  var average_reaction_time = Math.round(sumArray(timearr) / timearr.length - 1);
+  var correct_percentage = (correct/5)*100;
+
+  function moveToGuideline() {
+    navigate("/Brief");
+  }
+
+  return (
+    <>
+    
+
+    <div className="min-h-screen bg-gradient-to-r from-gray-800 to-gray-600 flex items-center justify-center">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold text-white mb-4">
+          Correct Response: {correct}.
+          <br />
+          Incorrect Response: {incorrect}.
+          <br/>
+          
+          
+        </h1>
+        <h2 className="text-3xl font-bold text-white mb-4"> Missed 2-back: {5-correct}.</h2>
+
+        <h2 className="text-2xl font-bold text-white mb-4">Correct Percentage is {correct_percentage} %.</h2>
+        <h2 className="text-2xl font-bold text-white mb-4">Your Average Reaction Time is {average_reaction_time} millisecond.</h2>
+        <table className="table-auto border-collapse border border-white mx-auto mb-8">
+          <thead>
+            <tr>
+              <th className="px-4 py-2 text-white">Reaction Times</th>
+            </tr>
+          </thead>
+          <tbody>
+            {timearr.map((time, index) => (
+              <tr key={index}>
+                <td className="border border-white px-4 py-2 text-white">{time} milliseconds</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <button
+          onClick={moveToGuideline}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition-all duration-300 ease-in-out transform hover:scale-105"
+        >
+          Back to the Home
+        </button>
+      </div>
+    </div>
+    
+    </>
+  );
+}
+
+export default Score;
